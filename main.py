@@ -4,11 +4,13 @@ import math
 import pymongo
 from pymongo import MongoClient, UpdateOne
 from collections import Counter
+from sys import argv
 
 from utils import scraper
 from utils.dump import KEYS
 from utils import dump
 from utils.logger import log
+
 
 YEAR_START = 2001
 YEAR_END = 2021
@@ -300,10 +302,11 @@ def update_db(year: str, month: str):
     log('Finished update')
 
 
-scraper.sync_wikies('ca', version='2021-01')
+lang = argv[1]
+scraper.sync_wikies(lang, version='2021-01')
 
 
-for path in scraper.get_tsv_files('ca'):
+for path in scraper.get_tsv_files(lang):
     CURRENT_YEAR = str(get_tsv_year(path.stem))
     log(f'Doing {CURRENT_YEAR}')
     analyze_file(str(path))
