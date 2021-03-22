@@ -35,10 +35,6 @@ EVENT = {
     'edit': 'edit'
 }
 
-client = MongoClient()
-users_collection = client.get_database('wiki').get_collection('cawiki_users')
-users_collection.create_index([('id', pymongo.ASCENDING)], name='id_index', unique=True)
-
 
 def get_tsv_year(tsv_file_name: str) -> int:
     return int(tsv_file_name.split('.')[::-1][1])
@@ -304,6 +300,10 @@ def update_db(year: str, month: str):
 
 lang = argv[1]
 scraper.sync_wikies(lang, version='2021-01')
+
+client = MongoClient()
+users_collection = client.get_database('user_metrics').get_collection(f'{lang}wiki_users')
+users_collection.create_index([('id', pymongo.ASCENDING)], name='id_index', unique=True)
 
 
 for path in scraper.get_tsv_files(lang):
