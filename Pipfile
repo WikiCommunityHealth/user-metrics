@@ -14,3 +14,8 @@ pylint = "*"
 
 [requires]
 python_version = "3.9"
+
+[scripts]
+it = "python main.py it"
+ca = "python main.py ca"
+en = "python main.py en"

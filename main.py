@@ -11,11 +11,6 @@ from utils.dump import KEYS
 from utils import dump
 from utils.logger import log
 
-
-YEAR_START = 2001
-YEAR_END = 2021
-
-CURRENT_YEAR = '2001'
 CURRENT_MONTH = '01'
 
 USER_EXISTS = set()
@@ -37,7 +32,7 @@ EVENT = {
 
 
 def get_tsv_year(tsv_file_name: str) -> int:
-    return int(tsv_file_name.split('.')[::-1][1])
+    return tsv_file_name.split('.')[::-1][1]
 
 
 def new_user_obj(uid: int, username: str, creation_timestamp, registration_timestamp, is_bot: bool, groups: list, blocks: list) -> dict:
@@ -299,7 +294,7 @@ def update_db(year: str, month: str):
 
 
 lang = argv[1]
-scraper.sync_wikies(lang, version='2021-01')
+#scraper.sync_wikies(lang, version='2021-01')
 
 client = MongoClient()
 users_collection = client.get_database('user_metrics').get_collection(f'{lang}wiki_users')
@@ -307,7 +302,7 @@ users_collection.create_index([('id', pymongo.ASCENDING)], name='id_index', uniq
 
 
 for path in scraper.get_tsv_files(lang):
-    CURRENT_YEAR = str(get_tsv_year(path.stem))
-    log(f'Doing {CURRENT_YEAR}')
+    year = get_tsv_year(path.stem)
+    log(f'Doing {year}')
     analyze_file(str(path))
     log('Done')
