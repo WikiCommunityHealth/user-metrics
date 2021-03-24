@@ -294,7 +294,7 @@ def update_db(year: str, month: str):
 
 
 lang = argv[1]
-#scraper.sync_wikies(lang, version='2021-01')
+scraper.sync_wikies(lang, version='2021-01')
 
 client = MongoClient()
 users_collection = client.get_database('user_metrics').get_collection(f'{lang}wiki_users')
