@@ -282,7 +282,10 @@ def update_db(year: str, month: str):
 
     log('Gotten inserts and updates')
     if (inserts):
-        users_collection.insert_many(inserts)
+        try:
+            users_collection.insert_many(inserts, ordered=False)
+        except:
+            pass
     log('Added inserts')
     if (updates):
         users_collection.bulk_write(updates)
