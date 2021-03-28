@@ -16,6 +16,6 @@ pylint = "*"
 python_version = "3.9"
 
 [scripts]
-it = "python main.py it"
-ca = "python main.py ca"
-en = "python main.py en"
+it = "python -u main.py it"
+ca = "python -u main.py ca"
+en = "python -u main.py en"
