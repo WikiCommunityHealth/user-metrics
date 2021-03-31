@@ -8,6 +8,7 @@ requests = "*"
 pymongo = "*"
 python-dateutil = "*"
 whdtscraper = "*"
+joblib = "*"
 
 [dev-packages]
 pylint = "*"
