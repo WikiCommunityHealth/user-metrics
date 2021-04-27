@@ -306,16 +306,3 @@ def start_process_file(path):
 
 num_cores = multiprocessing.cpu_count()
 Parallel(n_jobs=num_cores)(delayed(start_process_file)(path) for path in scraper.get_tsv_files(lang))
-
-# for path in scraper.get_tsv_files(lang):
-#     year, month = get_tsv_year_and_month(path.stem)
-#     log(f'Doing {year}')
-#     solve_file(str(path), year, month)
-#     log('Done')
-
-
-#started Doing 2001 2021-03-31T10:39:44Z
-#Done 2021-03-31T11:28:59Z
-
-#Start filling users 2021-03-31T11:37:06Z
-#End fill users 2021-03-31T11:49:43Z
