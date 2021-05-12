@@ -15,7 +15,7 @@ from utils import dump
 from utils.logger import log
 
 lang = argv[1]
-scraper.sync_wikies(lang, version='2021-01')
+scraper.sync_wikies(lang)
 
 def solve_file(path: str, start_year: int, start_month: int) -> None:
     CURRENT_MONTH = two_digits(start_month) if start_month is not None else '01'
@@ -186,6 +186,7 @@ def solve_file(path: str, start_year: int, start_month: int) -> None:
 
     def analyze_file(file_path: str) -> None:
         log('Start filling users')
+        timestamp = None
         with bz2.open(file_path, 'rt') as input:
             for line in input:
                 parts = line.split('\t')
@@ -205,6 +206,8 @@ def solve_file(path: str, start_year: int, start_month: int) -> None:
                     analyze_user_create(parts, timestamp)
                 elif event_entity == 'user' and event_type == 'altergroups':
                     analyze_user_altergroups(parts, timestamp)
+
+        check_if_new_month(timestamp, False)
         log('End fill users')
 
 

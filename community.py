@@ -2,16 +2,16 @@ from pymongo import MongoClient, UpdateOne
 from json import dumps
 
 client = MongoClient()
-users_collection = client.get_database('user_metrics').get_collection(f'itwiki_users')
+users_collection = client.get_database('user_metrics').get_collection(f'eswiki_users')
 
 users_no_dead = list(users_collection.find({ 'events.per_month': { "$ne": {} }}))
 
 result = {
     'tot': 0,
-    'per_ano': {
+    'per_anno': {
         
     },
-    'per_mes': {
+    'per_mese': {
 
     }
 }
@@ -37,7 +37,7 @@ for user in users_no_dead:
             if tot_events >= THRESHOLD:
                 is_tot = True
                 is_year = True
-                month_obj = result['per_mes']
+                month_obj = result['per_mese']
                 month_key = f'{year}_{month}'
                 try:
                     month_obj[month_key] += 1
@@ -45,7 +45,7 @@ for user in users_no_dead:
                     month_obj[month_key] = 1
 
         if is_year:
-            year_obj = result['per_ano']
+            year_obj = result['per_anno']
             year_key = f'{year}'
             try:
                 year_obj[year_key] += 1

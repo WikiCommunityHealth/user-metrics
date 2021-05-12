@@ -19,4 +19,5 @@ python_version = "3.9"
 [scripts]
 it = "python -u main.py it"
 ca = "python -u main.py ca"
+es = "python -u main.py es"
 en = "python -u main.py en"
