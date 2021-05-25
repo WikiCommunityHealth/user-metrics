@@ -9,6 +9,8 @@ pymongo = "*"
 python-dateutil = "*"
 whdtscraper = "*"
 joblib = "*"
+matplotlib = "*"
+numpy = "*"
 
 [dev-packages]
 pylint = "*"

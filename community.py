@@ -1,10 +1,14 @@
 from pymongo import MongoClient, UpdateOne
 from json import dumps
+from sys import argv
+
+lang = argv[1]
+
 
 client = MongoClient()
-users_collection = client.get_database('user_metrics').get_collection(f'eswiki_users')
+users_collection = client.get_database('user_metrics').get_collection(f'{lang}wiki_users')
 
-users_no_dead = list(users_collection.find({ 'events.per_month': { "$ne": {} }}))
+users_no_dead = users_collection.find({ 'events.per_month': { "$ne": {} }})
 
 result = {
     'tot': 0,
@@ -55,7 +59,6 @@ for user in users_no_dead:
     if is_tot:    
         result['tot'] += 1
 
-
-
-with open('community.json', 'w') as file:
+with open(f'community_{lang}.json', 'w') as file:
     file.write(dumps(result))     
+
