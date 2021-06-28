@@ -15,7 +15,7 @@ from utils import dump
 from utils.logger import log
 
 lang = argv[1]
-scraper.sync_wikies(lang)
+# scraper.sync_wikies(lang)
 
 
 def solve_file(path: str, start_year: int, start_month: int) -> None:

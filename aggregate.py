@@ -4,7 +4,7 @@ client = MongoClient()
 users_collection = client.get_database('user_metrics').get_collection(f'cawiki_users')
 users_collection_aggregated = client.get_database('user_metrics').get_collection(f'cawiki_users_aggregated')
 
-users_no_dead = list(users_collection.find({'events.per_month': {"$ne": {}}}))
+users_no_dead = list(users_collection.find())#list(users_collection.find({'events.per_month': {"$ne": {}}}))
 
 insert_queries = []
 

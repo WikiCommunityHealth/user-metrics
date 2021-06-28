@@ -1,4 +1,4 @@
-from pymongo import MongoClient, UpdateOne
+from pymongo import MongoClient
 from json import dumps
 from sys import argv
 
@@ -6,11 +6,38 @@ lang = argv[1]
 
 
 client = MongoClient()
-users_collection = client.get_database('user_metrics').get_collection(f'{lang}wiki_users')
+users_collection = client.get_database('user_metrics').get_collection(f'{lang}wiki_users_aggregated')
 
 users_no_dead = users_collection.find({ 'events.per_month': { "$ne": {} }})
 
 result = {
+    'tot': 0,
+    'per_anno': {
+        
+    },
+    'per_mese': {
+
+    }
+}
+result_maschio = {
+    'tot': 0,
+    'per_anno': {
+        
+    },
+    'per_mese': {
+
+    }
+}
+result_femmina = {
+    'tot': 0,
+    'per_anno': {
+        
+    },
+    'per_mese': {
+
+    }
+}
+result_mah = {
     'tot': 0,
     'per_anno': {
         
@@ -30,35 +57,86 @@ for user in users_no_dead:
         is_year = False
 
         for month, events_month in events_year.items():
-            tot_events = 0
-
-            for key, events_specific in events_month.items():
-                if key == 'unknown' or key[0] == 'n':
-                    for k, v in events_specific.items():
-                        if k != 'minor_edits':
-                            tot_events += v
+            try:
+                tot_events = events_month['total']['tot']
+            except:
+                tot_events = 0
 
             if tot_events >= THRESHOLD:
                 is_tot = True
                 is_year = True
-                month_obj = result['per_mese']
                 month_key = f'{year}_{month}'
                 try:
-                    month_obj[month_key] += 1
+                    result['per_mese'][month_key] += 1
                 except:
-                    month_obj[month_key] = 1
+                    result['per_mese'][month_key] = 1
+                try:
+                    if user['sex'] == True:
+                        try:
+                            result_maschio['per_mese'][month_key] += 1
+                        except:
+                            result_maschio['per_mese'][month_key] = 1
+                    elif user['sex'] == False:
+                        try:
+                            result_femmina['per_mese'][month_key] += 1
+                        except:
+                            result_femmina['per_mese'][month_key] = 1
+                    elif user['sex'] is None:
+                        try:
+                            result_mah['per_mese'][month_key] += 1
+                        except:
+                            result_mah['per_mese'][month_key] = 1
+                except:
+                    pass
 
         if is_year:
-            year_obj = result['per_anno']
             year_key = f'{year}'
             try:
-                year_obj[year_key] += 1
+                result['per_anno'][year_key] += 1
             except:
-                year_obj[year_key] = 1
+                result['per_anno'][year_key] = 1
+            try:
+                if user['sex'] is None:
+                    try:
+                        result_mah['per_anno'][year_key] += 1
+                    except:
+                        result_mah['per_anno'][year_key] = 1
+                elif user['sex'] == True:
+                    try:
+                        result_maschio['per_anno'][year_key] += 1
+                    except:
+                        result_maschio['per_anno'][year_key] = 1
+                elif user['sex'] == False:
+                    try:
+                        result_femmina['per_anno'][year_key] += 1
+                    except:
+                        result_femmina['per_anno'][year_key] = 1
+            except:
+                pass
 
     if is_tot:    
         result['tot'] += 1
+        try:
+            if user['sex'] == True:
+                result_maschio['tot'] += 1
+            elif user['sex'] == False:
+                result_femmina['tot'] += 1
+            elif user['sex'] is None:
+                result_mah['tot'] += 1
+        except:
+            pass
+        
+        
 
 with open(f'community_{lang}.json', 'w') as file:
     file.write(dumps(result))     
+
+with open(f'community_{lang}_maschio.json', 'w') as file:
+    file.write(dumps(result_maschio))   
+
+with open(f'community_{lang}_femmina.json', 'w') as file:
+    file.write(dumps(result_femmina))  
+
+with open(f'community_{lang}_boh.json', 'w') as file:
+    file.write(dumps(result_mah))    
 
